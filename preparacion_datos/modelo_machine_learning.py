@@ -65,15 +65,15 @@ for temporada in temporadas:
 # Luego tenemos que hallar los goles que ha marcado cada equipo como visitante
 # Para realizarlo, recorremos mediante un bucle for los goles visitantes que hemos hallado antes
 #Conseguimos así tener el equipo con sus goles como vistante
-df_golesVisitante = pd.DataFrame([[key, golesVisitante[key]] for key in golesVisitante.keys()], 
+df_goles_visitante = pd.DataFrame([[key, goles_visitante[key]] for key in goles_visitante.keys()], 
                                     columns = ['Equipo Visitante', 'Goles como Visitante'])
 
 
 # Hacemos lo mismo pero ahora evaluando cada equipo cuando juega como local
-df_golesLocal = pd.DataFrame([[key, golesLocal[key]] for key in golesLocal.keys()], 
+df_goles_local = pd.DataFrame([[key, goles_local[key]] for key in goles_local.keys()], 
                                     columns = ['Equipo Local', 'Goles como Local'])
 
-df_golesLocal.to_csv('preparacion_datos/golesLocal.csv', index=False)
-df_golesVisitante.to_csv('preparacion_datos/golesVistante.csv', index=False)
-df_total = pd.concat([df_golesLocal, df_golesVisitante], axis=1)
-df_total.to_csv(f'preparacion_datos/goles_cada_equipo.csv', index=False)
+df_goles_local.to_csv('preparacion_datos/goles_local.csv', index=False)
+df_goles_visitante.to_csv('preparacion_datos/goles_vistante.csv', index=False)
+df_conjunto = pd.concat([df_goles_local, df_goles_visitante], axis=1)
+df_conjunto.to_csv(f'preparacion_datos/goles_cada_equipo.csv', index=False)
