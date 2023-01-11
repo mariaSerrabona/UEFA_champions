@@ -42,19 +42,38 @@ for equipo in info_equipos:
 for temporada in temporadas:
 
     for index in range(len(Champions[temporada])):
-
-        #hacemos el mismo código para calcular los goles, tanto en local como en visitante
+        #hacemos el mismo código para calcular los goles, tanto en local como en visitant
 
         #Se mete en la temporada de la champions, en la fila del fichero,
-        # escogiendo solo la información de la columna Local. Si este equipo está en nuestra información
+        # escogiendo solo la información de la columna Visitante. Si este equipo está en nuestra información
         # de equipos:
-        if str(Champions[temporada].iloc[index]['Local']) in info_equipos:
+        if Champions[temporada].iloc[index]['Visitante'] in info_equipos:
             #Entonces añadimos los goles marcados en el partido que se está analizando
             # a los ya contabilizados del mismo equipo como visitante.
-            goles_local[Champions[temporada].iloc[index]['Local']] += int(Champions[temporada].iloc[index]['GolesLocal'])
-
-        #Reañizamos lo mismo, pero esta vez con el equipo como Visitante
-        if Champions[temporada].iloc[index]['Visitante'] in info_equipos:
             goles_visitante[Champions[temporada].iloc[index]['Visitante']] += int(Champions[temporada].iloc[index]['GolesVisitante'])
+
+        #Realizamos lo mismo, pero esta vez con el equipo como Visitante
+        if str(Champions[temporada].iloc[index]['Local']) in info_equipos:
+            goles_local[Champions[temporada].iloc[index]['Local']] += int(Champions[temporada].iloc[index]['GolesLocal'])
     print('Temporada '+ temporada+' realizada')
 
+
+#Ahora queremos generar un csv en el que figure el equipo y los goles que ha marcado como local.
+
+#Generamos directamnete un df con la información que nos interesa. 
+# Por una parte, tenemos key con el listado de los equipos
+# Luego tenemos que hallar los goles que ha marcado cada equipo como visitante
+# Para realizarlo, recorremos mediante un bucle for los goles visitantes que hemos hallado antes
+#Conseguimos así tener el equipo con sus goles como vistante
+df_golesVisitante = pd.DataFrame([[key, golesVisitante[key]] for key in golesVisitante.keys()], 
+                                    columns = ['Equipo Visitante', 'Goles como Visitante'])
+
+
+# Hacemos lo mismo pero ahora evaluando cada equipo cuando juega como local
+df_golesLocal = pd.DataFrame([[key, golesLocal[key]] for key in golesLocal.keys()], 
+                                    columns = ['Equipo Local', 'Goles como Local'])
+
+df_golesLocal.to_csv('preparacion_datos/golesLocal.csv', index=False)
+df_golesVisitante.to_csv('preparacion_datos/golesVistante.csv', index=False)
+df_total = pd.concat([df_golesLocal, df_golesVisitante], axis=1)
+df_total.to_csv(f'preparacion_datos/goles_cada_equipo.csv', index=False)
